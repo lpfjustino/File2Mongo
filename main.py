@@ -13,6 +13,12 @@ matches_folder2 = 'F:\RUBoosted\\new_matches\\2'
 matches_folder3 = 'F:\RUBoosted\\new_matches\\3'
 matches_folder4 = 'F:\RUBoosted\\new_matches\\4'
 matches_folder5 = 'F:\RUBoosted\\new_matches\\5'
+matches_folder6 = 'F:\RUBoosted\\new_matches\\6'
+matches_folder7 = 'F:\RUBoosted\\new_matches\\7'
+matches_folder8 = 'F:\RUBoosted\\new_matches\\8'
+matches_folder9 = 'F:\RUBoosted\\new_matches\\9'
+matches_folder10 = 'F:\RUBoosted\\new_matches\\10'
+matches_folder11 = 'F:\RUBoosted\\new_matches\\11'
 summoners_folder = 'D:\__NOTE\Documentos\RUBoosted\summoners'
 
 missing = 'C:\\Users\LuisPaulo\Documents\GitHub\RUBoosted\matches'
@@ -26,7 +32,8 @@ def insert_to_collection(directory, collection, temp):
     pathlist = Path(directory).glob('**/*.txt')
     count = 0
     n_files = len(os.listdir(directory))
-    o = open('D:\log'+temp+'.txt', 'a')
+    s = open('D:\success'+temp+'.txt', 'a')
+    e = open('D:\\failure'+temp+'.txt', 'a')
 
     for path in pathlist:
         # because path is object not string
@@ -40,11 +47,11 @@ def insert_to_collection(directory, collection, temp):
         match = json.load(f)
         try:
             db[collection].insert_one(match)
-            o.write('Successfully inserted \t'+path_in_str)
+            s.write(str(gameid_from_path(path)))
 
         except DuplicateKeyError:
+            e.write(str(gameid_from_path(path)))
             pass
-            # o.write(collection + ' already contains this document:\t'+path_in_str+'\n')
 
 def print_missing(directory):
         ids = []
@@ -60,9 +67,11 @@ def print_missing(directory):
 
             match = json.load(f)
             if 'status' in match:
-                ids.append(int(str.split(str.split(str(path), '\\')[4], '.')[0])) # GameID from directory
+                ids.append(gameid_from_path(path)) # GameID from directory
                 print(ids)
 
+def gameid_from_path(path):
+    return int(str.split(str.split(str(path), '\\')[4], '.')[0])
 
 # insert_to_collection(summoners_folder, 'summoners')
 
@@ -74,5 +83,5 @@ def print_missing(directory):
 
 # insert_to_collection(missing, 'matches', 'temp')
 
-# print_missing(matches_folder4)
-# print('5')
+print_missing(matches_folder7)
+print('7')
